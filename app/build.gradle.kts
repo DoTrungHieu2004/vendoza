@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -65,6 +66,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.text.google.fonts)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
 
     // Networking
     implementation(libs.retrofit)
@@ -77,6 +79,9 @@ dependencies {
     // DataStore & Security
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.security.crypto)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
 
     // Testing
     testImplementation(libs.junit)
