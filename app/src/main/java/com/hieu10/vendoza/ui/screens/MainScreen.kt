@@ -19,7 +19,7 @@ import com.hieu10.vendoza.ui.theme.VendozaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(onLogout: () -> Unit) {
     val navController = rememberNavController()
 
     Scaffold(
@@ -33,7 +33,7 @@ fun MainScreen() {
             composable<BottomNavItem.Home> { HomeScreen() }
             composable<BottomNavItem.Search> { SearchScreen() }
             composable<BottomNavItem.Cart> { CartScreen() }
-            composable<BottomNavItem.Profile> { ProfileScreen() }
+            composable<BottomNavItem.Profile> { ProfileScreen(onLogout = onLogout) }
         }
     }
 }
@@ -41,11 +41,11 @@ fun MainScreen() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewScreenLight() {
-    VendozaTheme(darkTheme = false) { MainScreen() }
+    VendozaTheme(darkTheme = false) { MainScreen(onLogout = {}) }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewScreenDark() {
-    VendozaTheme(darkTheme = true) { MainScreen() }
+    VendozaTheme(darkTheme = true) { MainScreen(onLogout = {}) }
 }

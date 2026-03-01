@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.hieu10.vendoza.ui.screens.MainScreen
+import com.hieu10.vendoza.ui.navigation.RootNavGraph
 import com.hieu10.vendoza.ui.theme.VendozaTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VendozaTheme {
-                MainScreen()
+                RootNavGraph()
             }
         }
     }
