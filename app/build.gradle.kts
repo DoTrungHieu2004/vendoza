@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -7,16 +9,6 @@ android {
     namespace = "com.hieu10.vendoza"
     compileSdk {
         version = release(36)
-    }
-
-    defaultConfig {
-        applicationId = "com.hieu10.vendoza"
-        minSdk = 26
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -33,7 +25,27 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
+        buildConfig = true
         compose = true
+    }
+
+    // Load secrets.properties
+    val secretsFile = rootProject.file("secrets.properties")
+    val secrets = Properties()
+    if (secretsFile.exists()) {
+        secrets.load(secretsFile.inputStream())
+    }
+
+    defaultConfig {
+        applicationId = "com.hieu10.vendoza"
+        minSdk = 26
+        targetSdk = 36
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_URL", "\"${secrets.getProperty("BASE_URL", "")}\"")
     }
 }
 
@@ -55,6 +67,9 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.runtime.livedata)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)

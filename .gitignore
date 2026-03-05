@@ -12,6 +12,7 @@ build/
 
 ### Local configuration ###
 local.properties
+secrets.properties
 
 ### Keystore and signing ###
 *.jks
