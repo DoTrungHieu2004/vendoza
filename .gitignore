@@ -1,0 +1,32 @@
+### Android Studio ###
+*.iml
+.idea/
+.cxx/
+*.ipr
+*.iws
+out/
+
+### Gradle ###
+.gradle/
+build/
+
+### Local configuration ###
+local.properties
+
+### Keystore and signing ###
+*.jks
+*.keystore
+
+### OS generated files ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### Other ###
+.cache/
+captures/
+.externalNativeBuild/
