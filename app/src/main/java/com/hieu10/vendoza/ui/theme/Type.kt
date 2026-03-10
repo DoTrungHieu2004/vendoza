@@ -13,8 +13,7 @@ val Typography = Typography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 57.sp,
-        lineHeight = 64.sp,
-        letterSpacing = -(0.25).em
+        lineHeight = 64.sp
     ),
 
     // Section titles
@@ -70,8 +69,7 @@ val Typography = Typography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.15.em
+        lineHeight = 24.sp
     ),
 
     // Button, tab labels
@@ -79,8 +77,7 @@ val Typography = Typography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
-        lineHeight = 20.sp,
-        letterSpacing = 0.1.em
+        lineHeight = 20.sp
     ),
 
     // Primary body text
@@ -88,8 +85,7 @@ val Typography = Typography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.em
+        lineHeight = 24.sp
     ),
 
     // Secondary body text, metadata
@@ -97,8 +93,7 @@ val Typography = Typography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.25.em
+        lineHeight = 16.sp
     ),
 
     // Captions, helper text
@@ -106,8 +101,7 @@ val Typography = Typography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.4.em
+        lineHeight = 16.sp
     ),
 
     // Buttons, text field labels
@@ -115,8 +109,7 @@ val Typography = Typography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
-        lineHeight = 20.sp,
-        letterSpacing = 0.1.em
+        lineHeight = 20.sp
     ),
 
     // Chips, small badges
@@ -124,8 +117,7 @@ val Typography = Typography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.em
+        lineHeight = 16.sp
     ),
 
     // Overline text
@@ -133,7 +125,6 @@ val Typography = Typography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.em
+        lineHeight = 16.sp
     )
 )

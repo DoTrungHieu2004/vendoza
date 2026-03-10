@@ -1,5 +1,47 @@
 <resources>
     <string name="app_name">Vendoza</string>
+    <string name="app_version">App version: %1$s</string>
+    <string name="copyright">© 2025 Vendoza. All rights reserved.</string>
+
+    <!-- ======================== -->
+    <!-- ========== UI ========== -->
+    <!-- ======================== -->
+
+    <!-- Content description -->
+    <string name="cd_app_logo">Vendoza logo</string>
+    <string name="cd_back">Back</string>
+
+    <!-- Headlines -->
+    <string name="headline_welcome_back">Welcome back!</string>
+    <string name="headline_create_account">Create account</string>
+
+    <!-- Subtitles -->
+    <string name="subtitle_sign_in">Sign in to continue</string>
+
+    <!-- Other texts -->
+    <string name="no_account_question">Don\'t have an account?</string>
+    <string name="accept_terms">I agree to %1$s and %2$s</string>
+
+    <!-- Input labels -->
+    <string name="label_username">Username</string>
+    <string name="label_email">Email</string>
+    <string name="label_phone">Phone</string>
+    <string name="label_password">Password</string>
+    <string name="label_confirm_password">Confirm password</string>
+
+    <!-- Text buttons -->
+    <string name="txt_btn_forgot_password">Forgot password?</string>
+    <string name="txt_btn_sign_up">Sign up</string>
+    <string name="txt_btn_terms">Terms of Service</string>
+    <string name="txt_btn_privacy">Privacy Policy</string>
+
+    <!-- Button texts -->
+    <string name="btn_sign_in">Sign in</string>
+    <string name="btn_sign_up">Sign up</string>
+
+    <!-- Error texts -->
+    <string name="error_password_not_match">Password do not match</string>
+    <string name="error_terms">You must accept the Terms and Privacy Policy</string>
 
     <!-- ================================ -->
     <!-- ========== VALIDATION ========== -->
