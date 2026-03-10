@@ -49,7 +49,9 @@ import com.hieu10.vendoza.ui.components.PasswordMeter
 import com.hieu10.vendoza.ui.components.TermsCheckbox
 import com.hieu10.vendoza.ui.components.bg.AppBG
 import com.hieu10.vendoza.ui.theme.VendozaTheme
+import com.hieu10.vendoza.utils.validation.AuthValidation
 import com.hieu10.vendoza.utils.validation.AuthValidation.PHONE_REGEX
+import com.hieu10.vendoza.utils.validation.ValidationResult
 import com.hieu10.vendoza.viewmodel.AuthViewModel
 import com.hieu10.vendoza.viewmodel.state.AuthUIState
 
@@ -124,22 +126,25 @@ private fun RegisterContent(
     }
 
     fun validateAndRegister() {
-        // Run validation
-        val isUsernameValid = username.length in 3..50
-        val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-        val isPhoneValid = PHONE_REGEX.matches(phone)
-        val isPasswordValid = password.length in 6..100
-        val doPasswordsMatch = password == confirmPassword && password.isNotBlank()
-        val isTermsAccepted = termsAccepted
+        val usernameResult = AuthValidation.validateUsername(username)
+        val emailResult = AuthValidation.validateEmail(email)
+        val phoneResult = AuthValidation.validatePhone(phone)
+        val passwordResult = AuthValidation.validatePassword(password)
+        val passwordsMatch = password == confirmPassword && password.isNotBlank()
 
-        usernameError = !isUsernameValid
-        emailError = !isEmailValid
-        phoneError = !isPhoneValid
-        passwordError = !isPasswordValid
-        confirmPasswordError = !doPasswordsMatch
-        termsError = !isTermsAccepted
+        usernameError = usernameResult !is ValidationResult.Valid
+        emailError = emailResult !is ValidationResult.Valid
+        phoneError = phoneResult !is ValidationResult.Valid
+        passwordError = passwordResult !is ValidationResult.Valid
+        confirmPasswordError = !passwordsMatch
+        termsError = !termsAccepted
 
-        if (isUsernameValid && isEmailValid && isPhoneValid && isPasswordValid && doPasswordsMatch && isTermsAccepted) {
+        if (usernameResult is ValidationResult.Valid &&
+            emailResult is ValidationResult.Valid &&
+            phoneResult is ValidationResult.Valid &&
+            passwordResult is ValidationResult.Valid &&
+            passwordsMatch && termsAccepted
+        ) {
             onRegisterClick(username, email, phone, password)
         }
     }
@@ -235,14 +240,14 @@ private fun RegisterContent(
             label = { Text(text = stringResource(id = R.string.label_phone)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            isError = emailError,
+            isError = phoneError,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Phone,
                     contentDescription = null
                 )
             },
-            supportingText = if (emailError) {
+            supportingText = if (phoneError) {
                 { Text(text = stringResource(id = R.string.error_phone_invalid)) }
             } else null,
             keyboardOptions = KeyboardOptions(

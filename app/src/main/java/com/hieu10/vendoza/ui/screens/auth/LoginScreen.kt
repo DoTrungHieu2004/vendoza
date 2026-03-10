@@ -48,6 +48,8 @@ import com.hieu10.vendoza.BuildConfig
 import com.hieu10.vendoza.R
 import com.hieu10.vendoza.ui.components.bg.AppBG
 import com.hieu10.vendoza.ui.theme.VendozaTheme
+import com.hieu10.vendoza.utils.validation.AuthValidation
+import com.hieu10.vendoza.utils.validation.ValidationResult
 import com.hieu10.vendoza.viewmodel.AuthViewModel
 import com.hieu10.vendoza.viewmodel.state.AuthUIState
 
@@ -103,21 +105,15 @@ private fun LoginContent(
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
 
-    // Reset failed errors when errorMessage changes (new failed attempt)
-    LaunchedEffect(key1 = errorMessage) {
-        if (errorMessage != null) {
-            emailError = true
-            passwordError = true
-        }
-    }
-
     // Validate on submit
     fun validateAndLogin() {
-        val isEmailValid = email.isNotBlank()
-        val isPasswordValid = password.isNotBlank()
-        emailError = !isEmailValid
-        passwordError = !isPasswordValid
-        if (isEmailValid && isPasswordValid) {
+        val emailResult = AuthValidation.validateEmail(email)
+        val passwordResult = AuthValidation.validatePassword(password)
+
+        emailError = emailResult !is ValidationResult.Valid
+        passwordError = passwordResult !is ValidationResult.Valid
+
+        if (emailResult is ValidationResult.Valid && passwordResult is ValidationResult.Valid) {
             onLoginClick(email, password)
         }
     }
@@ -231,6 +227,16 @@ private fun LoginContent(
         }
 
         Spacer(modifier = Modifier.height(12.dp))
+
+        // Backend error message
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
         
         // Login button with loading indicator
         Button(
