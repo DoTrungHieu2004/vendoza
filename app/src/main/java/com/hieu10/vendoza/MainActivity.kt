@@ -3,45 +3,30 @@ package com.hieu10.vendoza
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.hieu10.vendoza.data.local.TokenManager
+import com.hieu10.vendoza.data.remote.ApiClient
+import com.hieu10.vendoza.data.repository.AuthRepository
+import com.hieu10.vendoza.ui.navigation.NavGraph
 import com.hieu10.vendoza.ui.theme.VendozaTheme
+import com.hieu10.vendoza.viewmodel.factory.AuthVMFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        val tokenManager = TokenManager(applicationContext)
+
+        // Get AuthService and AuthRepository
+        val authService = ApiClient.authService
+        val authRepository = AuthRepository(authService, tokenManager)
+        val authVMFactory = AuthVMFactory(authRepository)
+
         setContent {
             VendozaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val navController = rememberNavController()
+                NavGraph(navController, authVMFactory)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    VendozaTheme {
-        Greeting("Android")
     }
 }

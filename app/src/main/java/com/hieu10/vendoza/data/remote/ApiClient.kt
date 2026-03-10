@@ -3,6 +3,7 @@ package com.hieu10.vendoza.data.remote
 import com.hieu10.vendoza.BuildConfig
 import com.hieu10.vendoza.data.interceptors.AuthInterceptor
 import com.hieu10.vendoza.data.local.TokenManager
+import com.hieu10.vendoza.data.remote.services.AuthService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -46,5 +47,9 @@ object ApiClient {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    val authService: AuthService by lazy {
+        retrofit.create(AuthService::class.java)
     }
 }
