@@ -81,7 +81,7 @@ fun RegisterScreen(
     AppBG {
         RegisterContent(
             onRegisterClick = { username, email, phone, password ->
-                viewModel.register(username, email, password, phone)
+                viewModel.register(username, email, phone, password)
             },
             isLoading = uiState is AuthUIState.Loading,
             errorMessage = (uiState as? AuthUIState.Error)?.message,
@@ -118,13 +118,6 @@ private fun RegisterContent(
     var confirmPasswordError by remember { mutableStateOf(false) }
     var termsError by remember { mutableStateOf(false) }
 
-    // Reset field errors when errorMessage changes (new failed attempt)
-    LaunchedEffect(key1 = errorMessage) {
-        if (errorMessage != null) {
-
-        }
-    }
-
     fun validateAndRegister() {
         val usernameResult = AuthValidation.validateUsername(username)
         val emailResult = AuthValidation.validateEmail(email)
@@ -145,7 +138,7 @@ private fun RegisterContent(
             passwordResult is ValidationResult.Valid &&
             passwordsMatch && termsAccepted
         ) {
-            onRegisterClick(username, email, phone, password)
+            onRegisterClick(username, email, phone.trim(), password)
         }
     }
 
@@ -234,7 +227,7 @@ private fun RegisterContent(
         OutlinedTextField(
             value = phone,
             onValueChange = {
-                phone = it
+                phone = it.trimStart()
                 phoneError = false
             },
             label = { Text(text = stringResource(id = R.string.label_phone)) },

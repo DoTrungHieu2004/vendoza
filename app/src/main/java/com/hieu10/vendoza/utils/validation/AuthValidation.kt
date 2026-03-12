@@ -4,7 +4,7 @@ import android.util.Patterns
 import com.hieu10.vendoza.R
 
 object AuthValidation {
-    val PHONE_REGEX = Regex("^[\\\\+]?[(]?[0-9]{1,4}[)]?[-\\\\s.]?[(]?[0-9]{1,4}[)]?[-\\\\s.]?[0-9]{1,9}$")
+    val PHONE_REGEX = Regex("""^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$""")
 
     fun validateUsername(username: String): ValidationResult {
         return when {
@@ -24,9 +24,10 @@ object AuthValidation {
     }
 
     fun validatePhone(phone: String): ValidationResult {
+        val trimmed = phone.trim()
         return when {
-            phone.isBlank() -> ValidationResult.Invalid(R.string.error_phone_required)
-            !PHONE_REGEX.matches(phone) -> ValidationResult.Invalid(R.string.error_phone_invalid)
+            trimmed.isBlank() -> ValidationResult.Invalid(R.string.error_phone_required)
+            !PHONE_REGEX.matches(trimmed) -> ValidationResult.Invalid(R.string.error_phone_invalid)
             else -> ValidationResult.Valid
         }
     }
