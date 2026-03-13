@@ -20,6 +20,7 @@
     <!-- Headlines -->
     <string name="headline_welcome_back">Welcome back!</string>
     <string name="headline_create_account">Create account</string>
+    <string name="headline_shop_by_category">Shop by category</string>
 
     <!-- Subtitles -->
     <string name="subtitle_sign_in">Sign in to continue</string>
@@ -44,6 +45,7 @@
     <!-- Button texts -->
     <string name="btn_sign_in">Sign in</string>
     <string name="btn_sign_up">Sign up</string>
+    <string name="btn_shop_now">Shop now</string>
 
     <!-- Error texts -->
     <string name="error_password_not_match">Password do not match</string>
