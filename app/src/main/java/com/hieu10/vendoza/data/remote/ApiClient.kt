@@ -4,6 +4,7 @@ import com.hieu10.vendoza.BuildConfig
 import com.hieu10.vendoza.data.interceptors.AuthInterceptor
 import com.hieu10.vendoza.data.local.TokenManager
 import com.hieu10.vendoza.data.remote.services.AuthService
+import com.hieu10.vendoza.data.remote.services.CategoryService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -51,5 +52,9 @@ object ApiClient {
 
     val authService: AuthService by lazy {
         retrofit.create(AuthService::class.java)
+    }
+
+    val categoryService: CategoryService by lazy {
+        retrofit.create(CategoryService::class.java)
     }
 }
