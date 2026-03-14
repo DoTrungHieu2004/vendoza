@@ -5,6 +5,9 @@ import com.hieu10.vendoza.data.interceptors.AuthInterceptor
 import com.hieu10.vendoza.data.local.TokenManager
 import com.hieu10.vendoza.data.remote.services.AuthService
 import com.hieu10.vendoza.data.remote.services.CategoryService
+import com.hieu10.vendoza.data.remote.services.ProductService
+import com.hieu10.vendoza.data.repository.CategoryRepository
+import com.hieu10.vendoza.data.repository.ProductRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -50,11 +53,25 @@ object ApiClient {
             .build()
     }
 
+    // API services
     val authService: AuthService by lazy {
         retrofit.create(AuthService::class.java)
     }
 
     val categoryService: CategoryService by lazy {
         retrofit.create(CategoryService::class.java)
+    }
+
+    val productService: ProductService by lazy {
+        retrofit.create(ProductService::class.java)
+    }
+
+    // Repositories
+    val categoryRepository: CategoryRepository by lazy {
+        CategoryRepository(categoryService)
+    }
+
+    val productRepository: ProductRepository by lazy {
+        ProductRepository(productService)
     }
 }
