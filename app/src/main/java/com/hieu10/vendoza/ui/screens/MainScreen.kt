@@ -12,17 +12,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.hieu10.vendoza.data.remote.ApiClient
 import com.hieu10.vendoza.ui.navigation.BottomNavItem
 import com.hieu10.vendoza.ui.screens.main.CartScreen
 import com.hieu10.vendoza.ui.screens.main.HomeScreen
 import com.hieu10.vendoza.ui.screens.main.ProfileScreen
 import com.hieu10.vendoza.ui.screens.main.SearchScreen
 import com.hieu10.vendoza.ui.theme.VendozaTheme
+import com.hieu10.vendoza.viewmodel.HomeViewModel
+import com.hieu10.vendoza.viewmodel.factory.HomeVMFactory
 
 @Composable
 fun MainScreen(onLogout: () -> Unit) {
@@ -77,7 +81,20 @@ fun MainScreen(onLogout: () -> Unit) {
             startDestination = BottomNavItem.Home.route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(BottomNavItem.Home.route) { HomeScreen() }
+            composable(BottomNavItem.Home.route) {
+                val homeViewModel: HomeViewModel = viewModel(
+                    factory = HomeVMFactory(
+                        ApiClient.categoryRepository,
+                        ApiClient.productRepository
+                    )
+                )
+
+                HomeScreen(
+                    viewModel = homeViewModel,
+                    onCategoryClick = {},
+                    onProductClick = {}
+                )
+            }
             composable(BottomNavItem.Search.route) { SearchScreen() }
             composable(BottomNavItem.Cart.route) { CartScreen() }
             composable(BottomNavItem.Profile.route) { ProfileScreen() }

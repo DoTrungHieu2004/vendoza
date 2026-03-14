@@ -21,6 +21,7 @@
     <string name="headline_welcome_back">Welcome back!</string>
     <string name="headline_create_account">Create account</string>
     <string name="headline_shop_by_category">Shop by category</string>
+    <string name="headline_featured_products">Featured products</string>
 
     <!-- Subtitles -->
     <string name="subtitle_sign_in">Sign in to continue</string>

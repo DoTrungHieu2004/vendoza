@@ -1,4 +1,4 @@
-package com.hieu10.vendoza.ui.components
+package com.hieu10.vendoza.ui.components.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
