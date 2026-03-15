@@ -13,6 +13,6 @@ interface CategoryService {
 
     @GET("api/categories/{identifier}")
     suspend fun getCategoryByIdOrSlug(
-        @Path("identifier") identifier: String
+        @Path("identifier") identifier: String?
     ): Category
 }

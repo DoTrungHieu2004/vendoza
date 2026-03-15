@@ -28,7 +28,7 @@ class CategoryRepository(
         }
     }
 
-    suspend fun getCategoryByIdOrSlug(identifier: String): Result<Category> {
+    suspend fun getCategoryByIdOrSlug(identifier: String?): Result<Category> {
         return try {
             val response = categoryService.getCategoryByIdOrSlug(identifier)
             Result.Success(response)

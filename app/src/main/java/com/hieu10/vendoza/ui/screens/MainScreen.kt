@@ -20,10 +20,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hieu10.vendoza.data.remote.ApiClient
 import com.hieu10.vendoza.ui.navigation.BottomNavItem
+import com.hieu10.vendoza.ui.navigation.Screen
 import com.hieu10.vendoza.ui.screens.main.CartScreen
 import com.hieu10.vendoza.ui.screens.main.HomeScreen
 import com.hieu10.vendoza.ui.screens.main.ProfileScreen
 import com.hieu10.vendoza.ui.screens.main.SearchScreen
+import com.hieu10.vendoza.ui.screens.user.ProductListScreen
 import com.hieu10.vendoza.ui.theme.VendozaTheme
 import com.hieu10.vendoza.viewmodel.HomeViewModel
 import com.hieu10.vendoza.viewmodel.factory.HomeVMFactory
@@ -91,13 +93,27 @@ fun MainScreen(onLogout: () -> Unit) {
 
                 HomeScreen(
                     viewModel = homeViewModel,
-                    onCategoryClick = {},
+                    onCategoryClick = { categoryId ->
+                        navController.navigate(Screen.ProductList.createRoute(categoryId))
+                    },
                     onProductClick = {}
                 )
             }
             composable(BottomNavItem.Search.route) { SearchScreen() }
             composable(BottomNavItem.Cart.route) { CartScreen() }
             composable(BottomNavItem.Profile.route) { ProfileScreen() }
+
+            // Non-bottom nav screens
+            composable(Screen.ProductList.route) { backStackEntry ->
+                val categoryId = backStackEntry.arguments?.getString("categoryId")
+                ProductListScreen(
+                    categoryId = categoryId,
+                    onNavigateBack = { navController.popBackStack() },
+                    onProductClick = { productId ->
+
+                    }
+                )
+            }
         }
     }
 }

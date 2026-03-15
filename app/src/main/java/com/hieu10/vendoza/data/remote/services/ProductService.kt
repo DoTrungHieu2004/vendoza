@@ -13,7 +13,8 @@ interface ProductService {
         @Query("limit") limit: Int = 10,
         @Query("q") query: String = "",
         @Query("sortBy") sortBy: String = "created_at",
-        @Query("order") order: String = "desc"
+        @Query("order") order: String = "desc",
+        @Query("category") category: String? = null,
     ): ProductsResponse
 
     @GET("api/products/{id}")

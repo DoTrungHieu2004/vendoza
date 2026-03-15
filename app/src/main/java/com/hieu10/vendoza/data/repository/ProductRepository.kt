@@ -20,10 +20,11 @@ class ProductRepository(
         limit: Int = 10,
         query: String = "",
         sortBy: String = "created_at",
-        order: String = "desc"
+        order: String = "desc",
+        categoryId: String? = null
     ): Result<ProductsResponse> {
         return try {
-            val response = productService.getProducts(page, limit, query, sortBy, order)
+            val response = productService.getProducts(page, limit, query, sortBy, order, categoryId)
             Result.Success(response)
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
