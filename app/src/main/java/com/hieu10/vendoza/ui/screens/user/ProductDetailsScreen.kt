@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,6 +26,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +43,7 @@ import com.hieu10.vendoza.data.remote.ApiClient
 import com.hieu10.vendoza.data.remote.models.CategorySummary
 import com.hieu10.vendoza.data.remote.models.Product
 import com.hieu10.vendoza.ui.components.RatingChip
+import com.hieu10.vendoza.ui.components.VariantSelector
 import com.hieu10.vendoza.ui.theme.VendozaTheme
 import com.hieu10.vendoza.viewmodel.ProductDetailsViewModel
 import com.hieu10.vendoza.viewmodel.factory.ProductDetailsVMFactory
@@ -102,6 +105,8 @@ private fun ProductDetailsContent(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var selectedVariant by remember { mutableStateOf(product.variants?.firstOrNull()) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -159,13 +164,24 @@ private fun ProductDetailsContent(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            val price = product.variants?.firstOrNull()?.price ?: 0.0
+
+            val price = selectedVariant?.price ?: product.variants?.firstOrNull()?.price ?: 0.0
             Text(
                 text = "${String.format("%.2f", price)} VND",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(16.dp))
+
+            if (product.variants != null && product.variants.size > 1) {
+                VariantSelector(
+                    variants = product.variants,
+                    initialVariant = selectedVariant,
+                    onVariantSelected = { selectedVariant = it },
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
             Text(
                 text = stringResource(id = R.string.section_description),
