@@ -24,6 +24,9 @@
     <string name="headline_featured_products">Featured products</string>
     <string name="headline_products">Products</string>
 
+    <!-- Sections -->
+    <string name="section_description">Description</string>
+
     <!-- Subtitles -->
     <string name="subtitle_sign_in">Sign in to continue</string>
 
@@ -49,6 +52,7 @@
     <string name="btn_sign_up">Sign up</string>
     <string name="btn_shop_now">Shop now</string>
     <string name="btn_retry">Retry</string>
+    <string name="btn_add_to_cart">Add to cart</string>
 
     <!-- Error texts -->
     <string name="error">Error: %1$s</string>

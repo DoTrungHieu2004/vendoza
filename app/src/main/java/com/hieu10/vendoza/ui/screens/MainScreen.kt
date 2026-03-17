@@ -25,6 +25,7 @@ import com.hieu10.vendoza.ui.screens.main.CartScreen
 import com.hieu10.vendoza.ui.screens.main.HomeScreen
 import com.hieu10.vendoza.ui.screens.main.ProfileScreen
 import com.hieu10.vendoza.ui.screens.main.SearchScreen
+import com.hieu10.vendoza.ui.screens.user.ProductDetailsScreen
 import com.hieu10.vendoza.ui.screens.user.ProductListScreen
 import com.hieu10.vendoza.ui.theme.VendozaTheme
 import com.hieu10.vendoza.viewmodel.HomeViewModel
@@ -96,7 +97,9 @@ fun MainScreen(onLogout: () -> Unit) {
                     onCategoryClick = { categoryId ->
                         navController.navigate(Screen.ProductList.createRoute(categoryId))
                     },
-                    onProductClick = {}
+                    onProductClick = { productId ->
+                        navController.navigate(Screen.ProductDetails.createRoute(productId))
+                    }
                 )
             }
             composable(BottomNavItem.Search.route) { SearchScreen() }
@@ -110,8 +113,16 @@ fun MainScreen(onLogout: () -> Unit) {
                     categoryId = categoryId,
                     onNavigateBack = { navController.popBackStack() },
                     onProductClick = { productId ->
-
+                        navController.navigate(Screen.ProductDetails.createRoute(productId))
                     }
+                )
+            }
+
+            composable(Screen.ProductDetails.route) { backStackEntry ->
+                val productId = backStackEntry.arguments?.getString("productId")
+                ProductDetailsScreen(
+                    productId = productId ?: "",
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }
