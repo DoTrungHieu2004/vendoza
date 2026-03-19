@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
+import com.hieu10.vendoza.data.local.SearchHistoryManager
 import com.hieu10.vendoza.data.local.TokenManager
 import com.hieu10.vendoza.data.remote.ApiClient
 import com.hieu10.vendoza.data.repository.AuthRepository
@@ -21,11 +22,12 @@ class MainActivity : ComponentActivity() {
         val authService = ApiClient.authService
         val authRepository = AuthRepository(authService, tokenManager)
         val authVMFactory = AuthVMFactory(authRepository)
+        val searchHistoryManager = SearchHistoryManager(applicationContext)
 
         setContent {
             VendozaTheme {
                 val navController = rememberNavController()
-                NavGraph(navController, authVMFactory)
+                NavGraph(navController, authVMFactory, searchHistoryManager)
             }
         }
     }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.hieu10.vendoza.data.local.SearchHistoryManager
 import com.hieu10.vendoza.ui.screens.MainScreen
 import com.hieu10.vendoza.ui.screens.auth.LoginScreen
 import com.hieu10.vendoza.ui.screens.auth.RegisterScreen
@@ -15,7 +16,8 @@ import com.hieu10.vendoza.viewmodel.factory.AuthVMFactory
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    authVMFactory: AuthVMFactory
+    authVMFactory: AuthVMFactory,
+    historyManager: SearchHistoryManager
 ) {
     NavHost(
         navController = navController,
@@ -67,7 +69,8 @@ fun NavGraph(
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Main.route) { inclusive = true }
                     }
-                }
+                },
+                historyManager = historyManager
             )
         }
     }

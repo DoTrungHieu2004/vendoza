@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -18,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.hieu10.vendoza.data.local.SearchHistoryManager
 import com.hieu10.vendoza.data.remote.ApiClient
 import com.hieu10.vendoza.ui.navigation.BottomNavItem
 import com.hieu10.vendoza.ui.navigation.Screen
@@ -32,7 +34,10 @@ import com.hieu10.vendoza.viewmodel.HomeViewModel
 import com.hieu10.vendoza.viewmodel.factory.HomeVMFactory
 
 @Composable
-fun MainScreen(onLogout: () -> Unit) {
+fun MainScreen(
+    onLogout: () -> Unit,
+    historyManager: SearchHistoryManager
+) {
     val navController = rememberNavController()
     val items = listOf(
         BottomNavItem.Home,
@@ -102,7 +107,14 @@ fun MainScreen(onLogout: () -> Unit) {
                     }
                 )
             }
-            composable(BottomNavItem.Search.route) { SearchScreen() }
+            composable(BottomNavItem.Search.route) {
+                SearchScreen(
+                    onProductClick = { productId ->
+                        navController.navigate(Screen.ProductDetails.createRoute(productId))
+                    },
+                    historyManager = historyManager
+                )
+            }
             composable(BottomNavItem.Cart.route) { CartScreen() }
             composable(BottomNavItem.Profile.route) { ProfileScreen() }
 
@@ -133,7 +145,10 @@ fun MainScreen(onLogout: () -> Unit) {
 @Composable
 private fun PreviewScreenLight() {
     VendozaTheme(darkTheme = false) {
-        MainScreen(onLogout = {})
+        MainScreen(
+            onLogout = {},
+            historyManager = SearchHistoryManager(LocalContext.current)
+        )
     }
 }
 
@@ -141,6 +156,9 @@ private fun PreviewScreenLight() {
 @Composable
 private fun PreviewScreenDark() {
     VendozaTheme(darkTheme = true) {
-        MainScreen(onLogout = {})
+        MainScreen(
+            onLogout = {},
+            historyManager = SearchHistoryManager(LocalContext.current)
+        )
     }
 }
