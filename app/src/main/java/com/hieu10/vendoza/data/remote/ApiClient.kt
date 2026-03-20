@@ -4,8 +4,10 @@ import com.hieu10.vendoza.BuildConfig
 import com.hieu10.vendoza.data.interceptors.AuthInterceptor
 import com.hieu10.vendoza.data.local.TokenManager
 import com.hieu10.vendoza.data.remote.services.AuthService
+import com.hieu10.vendoza.data.remote.services.CartService
 import com.hieu10.vendoza.data.remote.services.CategoryService
 import com.hieu10.vendoza.data.remote.services.ProductService
+import com.hieu10.vendoza.data.repository.CartRepository
 import com.hieu10.vendoza.data.repository.CategoryRepository
 import com.hieu10.vendoza.data.repository.ProductRepository
 import okhttp3.OkHttpClient
@@ -66,6 +68,10 @@ object ApiClient {
         retrofit.create(ProductService::class.java)
     }
 
+    val cartService: CartService by lazy {
+        retrofit.create(CartService::class.java)
+    }
+
     // Repositories
     val categoryRepository: CategoryRepository by lazy {
         CategoryRepository(categoryService)
@@ -73,5 +79,9 @@ object ApiClient {
 
     val productRepository: ProductRepository by lazy {
         ProductRepository(productService)
+    }
+
+    val cartRepository: CartRepository by lazy {
+        CartRepository(cartService)
     }
 }
