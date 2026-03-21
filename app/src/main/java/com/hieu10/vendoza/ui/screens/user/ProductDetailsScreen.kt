@@ -21,13 +21,18 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,12 +47,14 @@ import com.hieu10.vendoza.R
 import com.hieu10.vendoza.data.remote.ApiClient
 import com.hieu10.vendoza.data.remote.models.CategorySummary
 import com.hieu10.vendoza.data.remote.models.Product
+import com.hieu10.vendoza.data.repository.CartRepository
 import com.hieu10.vendoza.ui.components.RatingChip
 import com.hieu10.vendoza.ui.components.VariantSelector
 import com.hieu10.vendoza.ui.theme.VendozaTheme
 import com.hieu10.vendoza.viewmodel.ProductDetailsViewModel
 import com.hieu10.vendoza.viewmodel.factory.ProductDetailsVMFactory
 import com.hieu10.vendoza.viewmodel.state.ProductDetailsUIState
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProductDetailsScreen(
@@ -58,41 +65,65 @@ fun ProductDetailsScreen(
     val viewModel: ProductDetailsViewModel = viewModel(
         factory = ProductDetailsVMFactory(
             productRepository = ApiClient.productRepository,
+            cartRepository = ApiClient.cartRepository,
             productId = productId
         )
     )
     val uiState by viewModel.uiState.collectAsState()
 
-    when (uiState) {
-        is ProductDetailsUIState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        viewModel.addToCartResult.collect { result ->
+            val message = when (result) {
+                is CartRepository.Result.Success -> "Item added to cart"
+                is CartRepository.Result.Error -> result.message
+                else -> ""
+            }
+            if (message.isNotEmpty()) {
+                scope.launch { snackbarHostState.showSnackbar(message) }
             }
         }
-        is ProductDetailsUIState.Success -> {
-            val product = (uiState as ProductDetailsUIState.Success).product
-            ProductDetailsContent(
-                product = product,
-                onNavigateBack = onNavigateBack,
-                modifier = modifier
-            )
-        }
-        is ProductDetailsUIState.Error -> {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.error, uiState as ProductDetailsUIState.Error),
-                    color = MaterialTheme.colorScheme.error
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
+        when (uiState) {
+            is ProductDetailsUIState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            is ProductDetailsUIState.Success -> {
+                val product = (uiState as ProductDetailsUIState.Success).product
+                ProductDetailsContent(
+                    product = product,
+                    onNavigateBack = onNavigateBack,
+                    onAddToCart = { variantSku, quantity ->
+                        viewModel.addToCart(variantSku, quantity)
+                    },
+                    modifier = modifier.padding(paddingValues)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = { viewModel.loadProduct() }) {
-                    Text(text = stringResource(id = R.string.btn_retry))
+            }
+            is ProductDetailsUIState.Error -> {
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.error, uiState as ProductDetailsUIState.Error),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(onClick = { viewModel.loadProduct() }) {
+                        Text(text = stringResource(id = R.string.btn_retry))
+                    }
                 }
             }
         }
@@ -103,6 +134,7 @@ fun ProductDetailsScreen(
 private fun ProductDetailsContent(
     product: Product,
     onNavigateBack: () -> Unit,
+    onAddToCart: (String, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedVariant by remember { mutableStateOf(product.variants?.firstOrNull()) }
@@ -173,6 +205,23 @@ private fun ProductDetailsContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            val stock = selectedVariant?.stockQuantity ?: 0
+            val stockText = when {
+                stock <= 0 -> stringResource(id = R.string.label_out_of_stock)
+                stock < 5 -> stringResource(id = R.string.label_low_on_stock, stock)
+                else -> stringResource(id = R.string.label_in_stock)
+            }
+            Text(
+                text = stockText,
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (stock <= 0) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
             if (product.variants != null && product.variants.size > 1) {
                 VariantSelector(
                     variants = product.variants,
@@ -199,8 +248,11 @@ private fun ProductDetailsContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { /* TODO: Add to cart */ },
+                onClick = {
+                    selectedVariant?.let { onAddToCart(it.SKU, 1 ) }
+                },
                 modifier = Modifier.fillMaxWidth(),
+                enabled = selectedVariant != null && stock > 0,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
@@ -229,7 +281,8 @@ private fun PreviewScreenLight() {
     VendozaTheme(darkTheme = false) {
         ProductDetailsContent(
             product = sampleProduct,
-            onNavigateBack = {}
+            onNavigateBack = {},
+            onAddToCart = { _, _ -> }
         )
     }
 }
@@ -240,7 +293,8 @@ private fun PreviewScreenDark() {
     VendozaTheme(darkTheme = true) {
         ProductDetailsContent(
             product = sampleProduct,
-            onNavigateBack = {}
+            onNavigateBack = {},
+            onAddToCart = { _, _ -> }
         )
     }
 }

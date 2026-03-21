@@ -115,7 +115,13 @@ fun MainScreen(
                     historyManager = historyManager
                 )
             }
-            composable(BottomNavItem.Cart.route) { CartScreen() }
+            composable(BottomNavItem.Cart.route) {
+                CartScreen(
+                    onCheckoutClick = {
+                        // TODO: navigate to checkout screen
+                    }
+                )
+            }
             composable(BottomNavItem.Profile.route) { ProfileScreen() }
 
             // Non-bottom nav screens
